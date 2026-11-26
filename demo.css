@@ -1,4 +1,8 @@
-/* Estilos complementarios para la Demo Interactiva (compatibles con Tema Claro/Oscuro y ⚙️) */
+/* Estilos complementarios (compatibles con Tema Claro/Oscuro, ⚙️ y PDF) */
+
+html {
+  font-size: calc(clamp(15.5px, min(1.08vw, 1.88vh), 21px) * var(--scale-all));
+}
 
 .demo-layout {
   display: grid;
@@ -249,8 +253,65 @@
   margin-right: 8px;
 }
 
+.dual-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.chart-frame {
+  flex: 1;
+  min-height: 0;
+  background: var(--surface-alt);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.chart-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.chart-cap {
+  font-size: calc(0.9rem * var(--scale-meta));
+  font-weight: 600;
+  color: var(--text);
+}
+
 @media (max-width: 900px) {
   .demo-layout { grid-template-columns: 1fr; }
   .manual-grid { grid-template-columns: repeat(2, 1fr); }
   .flow-strip.flow-4 { grid-template-columns: 1fr 1fr; }
+  .dual-charts { grid-template-columns: 1fr; }
+}
+
+@media print {
+  html { font-size: 17px !important; }
+  .demo-top-row,
+  .city-mini-row,
+  .demo-actions,
+  .demo-status,
+  .media-controls {
+    display: none !important;
+  }
 }

@@ -1,4 +1,17 @@
 (() => {
+  // Lightbox para tarjetas de gráficos duales (.chart-frame img)
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbCap = document.getElementById("lbCap");
+  document.querySelectorAll(".chart-frame img").forEach((img) => {
+    img.addEventListener("click", () => {
+      if (!lb || !lbImg) return;
+      lbImg.src = img.src;
+      if (lbCap) lbCap.textContent = img.alt || "";
+      lb.classList.add("open");
+    });
+  });
+
   const apiBaseInput = document.getElementById("demoApiBase");
   if (!apiBaseInput) return;
 
