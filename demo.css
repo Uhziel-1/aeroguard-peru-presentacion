@@ -4,10 +4,8 @@
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
   gap: 18px;
-  flex: 1;
-  min-height: 0;
-  align-items: start;
-  align-content: center;
+  margin: auto 0;
+  align-items: stretch;
 }
 
 .demo-box {
@@ -226,10 +224,10 @@
   color: var(--accent);
 }
 
-/* Evita tarjetas estiradas con mitad en blanco cuando hay 2 columnas de tarjetas */
+/* Mantiene alturas uniformes dentro de cada fila de tarjetas */
 .card-grid-2,
 .card-grid-3 {
-  align-items: start;
+  align-items: stretch;
 }
 
 .flow-strip.flow-4 {
