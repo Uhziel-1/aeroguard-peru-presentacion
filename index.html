@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-nav-pos="bottom" data-anim="on">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AeroGuard Perú — App Web, CRISP-DM y Reproducibilidad</title>
+  <link rel="stylesheet" href="deck-base.css" />
+  <link rel="stylesheet" href="animaciones.css" />
+  <link rel="stylesheet" href="demo.css?v=2" />
+</head>
+<body>
+
+  <div class="top-progress"><div id="progressFill" class="top-progress-fill"></div></div>
+
+  <main class="deck">
+
+    <!-- ==================== 01 · PORTADA ==================== -->
+    <section class="slide slide-title active" data-group="0" data-color="#1e293b" data-kind="title" data-title="Portada" style="--slide-color:#1e293b">
+      <div class="title-pill anim d1">Minería de Datos · Entregable de Unidad III</div>
+      <h1 class="anim d2">AeroGuard Perú</h1>
+      <p class="title-sub anim d3">
+        Aplicación web de alerta temprana de aire dañino (+6 horas), conectada a APIs reales y construida paso a paso con la metodología CRISP-DM.
+      </p>
+      <div class="cover-meta anim d4">
+        <span><strong>Autor:</strong> Uhziel Elí Condori Rojas</span>
+        <span><strong>Universidad:</strong> UPeU · Ciclo VIII (2026-2)</span>
+        <span><strong>Metodología:</strong> CRISP-DM (6 Fases)</span>
+      </div>
+    </section>
+
+    <!-- ==================== SECCIÓN 01 (#2563eb): LA APP WEB Y UTILIDAD ==================== -->
+    <section class="slide slide-title" data-group="1" data-color="#2563eb" data-kind="title" data-title="01 · La App Web" style="--slide-color:#2563eb">
+      <div class="title-pill anim d1">Sección 01</div>
+      <h1 class="anim d2">La App Web: ¿Para qué sirve?</h1>
+      <p class="title-sub anim d3">Explicación simple del sistema libre, cómo consume las APIs y demostración en vivo.</p>
+      <span class="section-num-bg">01</span>
+    </section>
+
+    <!-- 1.1 UTILIDAD REAL -->
+    <section class="slide" data-group="1" data-color="#2563eb" data-kind="content" data-title="1.1 Utilidad real de la App" style="--slide-color:#2563eb">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">01 · La App Web</div>
+        <h2>1.1 ¿Para qué sirve esta aplicación en la vida real?</h2>
+        <p class="header-summary">Las apps normales solo muestran el aire actual; AeroGuard avisa con 6 horas de ventaja si se volverá dañino.</p>
+      </header>
+      <div class="full-body">
+        <div class="card-grid-3 anim d2">
+          <div class="card accent-left">
+            <h3>¿Qué es aire dañino (PM2.5)?</h3>
+            <p>Polvo y humo ultrafino <strong>30× más delgado que un cabello</strong> que entra directo a pulmones y sangre. La OMS fija <strong>15 µg/m³</strong> como límite seguro.</p>
+          </div>
+          <div class="card accent-left">
+            <h3>¿Quién usa esta Web?</h3>
+            <p><strong>Municipalidades, colegios y postas médicas</strong> para saber con 6h de anticipación si deben suspender actividades físicas al aire libre.</p>
+          </div>
+          <div class="card accent-left">
+            <h3>¿Qué hace el usuario?</h3>
+            <p>Elige una ciudad del Perú, ve clima y aire actual desde <strong>Open-Meteo</strong>, consulta la alerta a +6h y guarda reportes en <strong>SQLite</strong>.</p>
+          </div>
+        </div>
+        <div class="kpi-row anim d3">
+          <div class="kpi">
+            <div class="val">52,704</div>
+            <div class="lbl">Registros horarios reales analizados (1 año)</div>
+          </div>
+          <div class="kpi">
+            <div class="val">6 Ciudades</div>
+            <div class="lbl">Lima, Arequipa, Cusco, Juliaca, Trujillo y Piura</div>
+          </div>
+          <div class="kpi">
+            <div class="val">+6 Horas</div>
+            <div class="lbl">Anticipación de la alerta predictiva</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.2 CÓMO FUNCIONA -->
+    <section class="slide" data-group="1" data-color="#2563eb" data-kind="content" data-title="1.2 Cómo funciona por dentro" style="--slide-color:#2563eb">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">01 · La App Web</div>
+        <h2>1.2 Cómo se conectan las APIs y la Base de Datos</h2>
+        <p class="header-summary">Consumo de API externa (Open-Meteo) + API propia de predicción (FastAPI) + registro propio en SQLite.</p>
+      </header>
+      <div class="full-body" data-stepper>
+        <div class="flow-strip flow-4 anim d2">
+          <div class="flow-node" data-step data-step-msg="1) API Externa Open-Meteo (satélites + estaciones): entrega temperatura, viento y PM2.5 de las últimas 24 horas.">
+            <span class="flow-step">Paso 1 · API Externa</span>
+            <h4>Open-Meteo Live</h4>
+            <p>Clima y calidad del aire en tiempo real por coordenadas.</p>
+          </div>
+          <div class="flow-node" data-step data-step-msg="2) Módulo compartido src/features.py: calcula tendencias de hace 3h y 6h más hora/mes cíclicos (27 variables).">
+            <span class="flow-step">Paso 2 · Preparación</span>
+            <h4>src/features.py</h4>
+            <p>Transforma los datos de entrada igual que en entrenamiento.</p>
+          </div>
+          <div class="flow-node" data-step data-step-msg="3) FastAPI + Modelo ML: evalúa las 27 variables y responde probabilidad de riesgo a +6 horas.">
+            <span class="flow-step">Paso 3 · API Propia</span>
+            <h4>FastAPI + Modelo ML</h4>
+            <p>Calcula probabilidad, nivel de riesgo y recomendación.</p>
+          </div>
+          <div class="flow-node" data-step data-step-msg="4) Dashboard Web + SQLite: muestra todo en pantalla y guarda el historial de reportes del operador.">
+            <span class="flow-step">Paso 4 · Sistema Libre</span>
+            <h4>Web App + SQLite</h4>
+            <p>Interfaz visual y bitácora persistente (GET/POST /alertas).</p>
+          </div>
+        </div>
+
+        <div class="card anim d3" style="display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div data-step-status data-step-default="Pulsa <strong>Siguiente paso</strong> para destacar el recorrido completo de los datos." style="flex:1; font-size:0.95rem;">
+            Pulsa <strong>Siguiente paso</strong> para destacar el recorrido completo de los datos.
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="nav-btn" data-step-prev>◀</button>
+            <button type="button" class="nav-btn" data-step-next>Siguiente paso ▶</button>
+            <button type="button" class="nav-btn" data-step-reset>↺</button>
+          </div>
+        </div>
+
+        <div class="card-grid-3 anim d4">
+          <div class="card">
+            <h3><code>GET /live-monitor/{ciudad}</code></h3>
+            <p>Trae datos reales de Open-Meteo ahora mismo y predice riesgo en +6h.</p>
+          </div>
+          <div class="card">
+            <h3><code>POST /predict</code></h3>
+            <p>Recibe datos manuales validados con Pydantic v2 (también en <code>/docs</code>).</p>
+          </div>
+          <div class="card">
+            <h3><code>GET / POST /alertas</code></h3>
+            <p>Guarda y consulta inspecciones reales en la base de datos SQLite.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.3 DEMO EN VIVO -->
+    <section class="slide" data-group="1" data-color="#2563eb" data-kind="content" data-title="1.3 Demo Interactiva API" style="--slide-color:#2563eb">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">01 · La App Web</div>
+        <h2>1.3 Demo en Vivo: Meter Datos y Probar la API</h2>
+        <p class="header-summary">Elige una ciudad (API Open-Meteo en vivo) o edita los valores para probar la predicción directa.</p>
+      </header>
+
+      <div class="demo-layout anim d2">
+        <div class="demo-box">
+          <div class="demo-top-row">
+            <div class="demo-seg">
+              <button type="button" id="btnEnvLocal" class="is-active">Local</button>
+              <button type="button" id="btnEnvRender">Render</button>
+            </div>
+            <input id="demoApiBase" class="demo-url-input" type="text" value="http://127.0.0.1:8000" aria-label="URL base de la API" />
+          </div>
+
+          <div class="city-mini-row">
+            <button type="button" class="city-mini-btn is-active" data-city="Lima">Lima</button>
+            <button type="button" class="city-mini-btn" data-city="Arequipa">Arequipa</button>
+            <button type="button" class="city-mini-btn" data-city="Cusco">Cusco</button>
+            <button type="button" class="city-mini-btn" data-city="Juliaca">Juliaca</button>
+            <button type="button" class="city-mini-btn" data-city="Trujillo">Trujillo</button>
+            <button type="button" class="city-mini-btn" data-city="Piura">Piura</button>
+          </div>
+
+          <div class="manual-grid">
+            <label class="m-field">
+              <span>ciudad</span>
+              <select id="dCiudad">
+                <option value="Arequipa" selected>Arequipa</option>
+                <option value="Lima">Lima</option>
+                <option value="Cusco">Cusco</option>
+                <option value="Juliaca">Juliaca</option>
+                <option value="Trujillo">Trujillo</option>
+                <option value="Piura">Piura</option>
+              </select>
+            </label>
+            <label class="m-field">
+              <span>pm2_5 (0–500)</span>
+              <input id="dPm25" type="number" step="0.1" value="21.4" />
+            </label>
+            <label class="m-field">
+              <span>pm10 (0–1000)</span>
+              <input id="dPm10" type="number" step="0.1" value="38.5" />
+            </label>
+            <label class="m-field">
+              <span>temp (-20..50)</span>
+              <input id="dTemp" type="number" step="0.1" value="15.2" />
+            </label>
+            <label class="m-field">
+              <span>humedad (0–100)</span>
+              <input id="dHum" type="number" step="1" value="58" />
+            </label>
+            <label class="m-field">
+              <span>viento (km/h)</span>
+              <input id="dWind" type="number" step="0.1" value="3.4" />
+            </label>
+            <label class="m-field">
+              <span>presión (hPa)</span>
+              <input id="dPress" type="number" step="1" value="772" />
+            </label>
+            <label class="m-field">
+              <span>hora (0–23)</span>
+              <input id="dHora" type="number" min="0" max="23" value="20" />
+            </label>
+          </div>
+
+          <div class="demo-actions">
+            <button type="button" id="btnPresetCrit" class="demo-btn-sec">Riesgo Alto</button>
+            <button type="button" id="btnPresetSafe" class="demo-btn-sec">Normal</button>
+            <button type="button" id="btnRunPredict" class="demo-btn-main">Predecir POST /predict →</button>
+          </div>
+          <div id="demoStatus" class="demo-status">Haz clic en una ciudad (en vivo) o edita los valores y pulsa Predecir.</div>
+        </div>
+
+        <div class="demo-box">
+          <div class="res-head">
+            <span id="resBadge" class="res-badge tone-bad">Riesgo Alto / Crítico</span>
+            <span id="resMeta" class="code-inline-note">Listo para consultar</span>
+          </div>
+          <div id="resProb" class="res-prob-big">-- %</div>
+          <div id="resSub" style="font-weight:600; font-size:0.9rem;">Pronóstico PM2.5 (t + 6h) ≥ 15 µg/m³</div>
+          <div class="bar-track"><div id="resBar" class="bar-fill" style="width:0%"></div></div>
+          <ul id="resFactors" class="res-factors">
+            <li>Selecciona una ciudad arriba o ejecuta <code>POST /predict</code> para ver los factores físicos reales.</li>
+          </ul>
+          <div id="resRec" class="res-rec">
+            Asegúrate de tener encendido el servidor (<code>ABRIR_SISTEMA.bat</code>) o la URL de Render activa.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECCIÓN 02 (#7c3aed): METODOLOGÍA CRISP-DM (UN SOLO GRUPO) ==================== -->
+    <section class="slide slide-title" data-group="2" data-color="#7c3aed" data-kind="title" data-title="02 · Metodología CRISP-DM" style="--slide-color:#7c3aed">
+      <div class="title-pill anim d1">Sección 02</div>
+      <h1 class="anim d2">Metodología CRISP-DM</h1>
+      <p class="title-sub anim d3">Cross-Industry Standard Process for Data Mining: las 6 fases ordenadas que seguimos desde el problema hasta el despliegue.</p>
+      <span class="section-num-bg">02</span>
+    </section>
+
+    <!-- 2.0 VISIÓN GENERAL: QUÉ ES CRISP-DM -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="2.0 Qué es CRISP-DM" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · Metodología CRISP-DM</div>
+        <h2>2.0 ¿Qué significa CRISP-DM y cuáles son sus 6 fases?</h2>
+        <p class="header-summary">Es el estándar mundial de 6 pasos para desarrollar proyectos de Minería de Datos de forma ordenada e iterativa.</p>
+      </header>
+      <div class="full-body">
+        <div class="card-grid-3 anim d2">
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 1</span> Comprensión del Negocio</h3>
+            <p>Definir qué problema real resolvemos y cuál es la meta mínima de éxito.</p>
+          </div>
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 2</span> Comprensión de Datos</h3>
+            <p>Descargar datos reales vía API externa y analizarlos con gráficas (EDA).</p>
+          </div>
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 3</span> Preparación de Datos</h3>
+            <p>Crear variables causales sin fuga de datos y separar pasado vs. futuro.</p>
+          </div>
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 4</span> Modelado</h3>
+            <p>Entrenar y comparar varios algoritmos buscando el mejor equilibrio.</p>
+          </div>
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 5</span> Evaluación</h3>
+            <p>Medir desempeño en meses futuros reales y explicar sus decisiones (SHAP).</p>
+          </div>
+          <div class="card accent-left">
+            <h3><span class="phase-chip">Fase 6</span> Despliegue</h3>
+            <p>Servir el modelo en la App Web con guía reproducible paso a paso.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 1 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 1: Comprensión del Negocio" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 1 de 6</div>
+        <h2>Fase 1: Comprensión del Negocio</h2>
+        <p class="header-summary">Antes de programar modelos, definimos qué necesita el usuario y cómo sabremos si el modelo funciona.</p>
+      </header>
+      <div class="full-body">
+        <div class="card-grid-2 anim d2">
+          <div class="card accent-left">
+            <h3>Objetivo de Negocio (Sistema)</h3>
+            <ul class="bullet-list">
+              <li><strong>Problema:</strong> Los monitores actuales solo informan el presente y llegan tarde para proteger la salud.</li>
+              <li><strong>Meta práctica:</strong> Alertar con <strong>6 horas de anticipación</strong> cuando el PM2.5 vaya a superar <code>15 µg/m³</code> (OMS).</li>
+              <li><strong>Trazabilidad:</strong> Guardar inspecciones y alertas en una base de datos SQLite.</li>
+            </ul>
+          </div>
+          <div class="card accent-left">
+            <h3>Objetivo de Minería (Técnico)</h3>
+            <ul class="bullet-list">
+              <li><strong>Tarea ML:</strong> Clasificación binaria supervisada (<code>0</code> = Normal, <code>1</code> = Alerta OMS).</li>
+              <li><strong>Criterio de éxito:</strong> Alcanzar <strong><code>ROC-AUC ≥ 0.80</code></strong> en meses futuros reales, superando al modelo base lineal.</li>
+              <li><strong>Explicabilidad:</strong> Justificar cada alerta con variables físicas reales vía SHAP.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="result-pill anim d3">
+          <strong>Evidencia documental:</strong> Definido antes del modelado en <code>docs/01_FASE1_Comprension_Negocio.md</code>.
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 2 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 2: Comprensión de Datos" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 2 de 6</div>
+        <h2>Fase 2: Comprensión de los Datos (52,704 horas reales)</h2>
+        <p class="header-summary">Extracción desde Open-Meteo (satélites Copernicus + estaciones) con 0 nulos; análisis por ciudad motivó calibrar el umbral a 15 µg/m³.</p>
+      </header>
+      <div class="split-body">
+        <div class="media-panel anim d2" data-images='[
+          {"src":"assets/01_eda_pm25_ciudades.png","caption":"Figura 1: Distribución de PM2.5 y % de horas sobre la Guía OMS (15 µg/m³)"},
+          {"src":"assets/02_eda_ciclo_horario.png","caption":"Figura 2: Ciclo horario promedio — picos marcados al anochecer y hora punta"},
+          {"src":"assets/03_eda_correlaciones.png","caption":"Figura 3: Correlaciones entre PM2.5, PM10 (0.79), NO₂ (0.49), clima y altitud"}
+        ]'>
+          <div class="media-stage">
+            <img alt="Gráficas reales de EDA" />
+            <span class="zoom-hint">Clic para ampliar</span>
+          </div>
+          <div class="media-bar">
+            <span class="media-caption"></span>
+            <div class="media-controls">
+              <button class="img-btn img-prev" title="Imagen anterior ([)">◀</button>
+              <span class="img-counter">1 / 3</span>
+              <button class="img-btn img-next" title="Imagen siguiente (])">▶</button>
+            </div>
+          </div>
+        </div>
+        <div class="text-panel anim d3">
+          <div class="card accent-left">
+            <h3>Pivote Real por Hallazgo EDA</h3>
+            <ul class="bullet-list">
+              <li><strong>Con umbral <code>≥ 25 µg/m³</code>:</strong> Solo <strong>4.34 %</strong> era positivo (casi todo Arequipa; Lima 0.25 %).</li>
+              <li><strong>Ajuste a Guía OMS (<code>≥ 15 µg/m³</code>):</strong> Balance nacional sano de <strong>22.04 %</strong> en Costa y Sierra.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tasa OMS (≥ 15 µg/m³) por Ciudad</h3>
+            <table class="clean-table" style="margin-top:6px">
+              <thead><tr><th>Ciudad</th><th>Altitud</th><th>Prom.</th><th>% OMS</th></tr></thead>
+              <tbody>
+                <tr class="hl"><td>Arequipa</td><td>2,335 m</td><td>19.85</td><td>67.82 %</td></tr>
+                <tr class="hl"><td>Lima</td><td>154 m</td><td>14.16</td><td>41.05 %</td></tr>
+                <tr><td>Trujillo / Cusco</td><td>34 / 3,399 m</td><td>11.4 / 6.8</td><td>12.4 / 8.1 %</td></tr>
+                <tr><td>Juliaca / Piura</td><td>3,824 / 29 m</td><td>5.1 / 6.9</td><td>2.7 / 0.2 %</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 3 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 3: Preparación de Datos" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 3 de 6</div>
+        <h2>Fase 3: Preparación de los Datos (Sin Fuga de Datos)</h2>
+        <p class="header-summary">Usamos únicamente variables disponibles en ≤ t para predecir si PM2.5(t + 6h) ≥ 15 µg/m³, con corte cronológico estricto.</p>
+      </header>
+      <div class="full-body">
+        <div class="card-grid-3 anim d2">
+          <div class="card accent-left">
+            <h3>1. Estado en <code>t</code> (14 vars)</h3>
+            <p>Altitud, 8 climáticas (temperatura, humedad, presión, viento, radiación) y 5 de aire (<code>PM2.5</code>, <code>PM10</code>, <code>NO₂</code>, <code>CO</code>, <code>O₃</code>).</p>
+          </div>
+          <div class="card accent-left">
+            <h3>2. Tendencia Pasada (7 vars)</h3>
+            <p>Rezagos de 3h y 6h (<code>pm25_lag3</code>, <code>lag6</code>) más cambios recientes (<code>deltas</code>) en el módulo compartido <code>src/features.py</code>.</p>
+          </div>
+          <div class="card accent-left">
+            <h3>3. Hora Cíclica + Ciudad (6)</h3>
+            <p>Seno/coseno de hora y mes (une 23h con 00h) más <code>ciudad</code> y <code>region</code> codificadas dentro del <code>Pipeline</code>.</p>
+          </div>
+        </div>
+        <div class="card anim d3">
+          <h3>Partición Cronológica (De 52,704 → 52,632 filas completas)</h3>
+          <table class="clean-table" style="margin-top:8px">
+            <thead>
+              <tr><th>Conjunto</th><th>Periodo</th><th>Registros</th><th>Tasa OMS</th><th>Para qué se usa</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Train (Pasado)</strong></td><td>2025-11-20 → 2026-08-31</td><td><strong>41,004</strong></td><td>22.26 %</td><td>Entrenar y validar con <code>TimeSeriesSplit(5)</code></td></tr>
+              <tr class="hl"><td><strong>Holdout (Futuro)</strong></td><td>2026-09-01 → 2026-11-20</td><td><strong>11,628</strong></td><td>21.29 %</td><td>Probar si el modelo acierta en meses futuros reales</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 4 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 4: Modelado" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 4 de 6</div>
+        <h2>Fase 4: Modelado y Comparación de 3 Algoritmos</h2>
+        <p class="header-summary">Comparamos un modelo lineal base contra dos ensambles de árboles usando búsqueda de hiperparámetros con TimeSeriesSplit.</p>
+      </header>
+      <div class="full-body">
+        <div class="card-grid-2 anim d2">
+          <div class="card">
+            <h3>Métricas Reales (RandomizedSearchCV)</h3>
+            <table class="clean-table" style="margin-top:8px">
+              <thead>
+                <tr><th>Modelo</th><th>CV AUC</th><th>Holdout AUC</th><th>F1</th><th>Recall</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>LogisticRegression (Base)</td><td>0.9177</td><td>0.9557</td><td>0.7731</td><td>0.7460</td></tr>
+                <tr><td>RandomForestClassifier</td><td>0.9238</td><td>0.9675</td><td>0.8022</td><td>0.7674</td></tr>
+                <tr class="hl"><td>HistGradientBoosting</td><td><strong>0.9261</strong></td><td>0.9658</td><td><strong>0.8122</strong></td><td><strong>0.7876</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Comparativa de F1-Score en Holdout</h3>
+            <div class="bar-chart" style="margin-top:12px">
+              <div class="bar-row">
+                <span class="bar-lbl">HistGradientBoosting</span>
+                <div class="bar-track"><div class="bar-fill" style="--w:81.22%"></div></div>
+                <span class="bar-num">0.8122</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-lbl">Random Forest</span>
+                <div class="bar-track"><div class="bar-fill" style="--w:80.22%; --bar-c:#10b981"></div></div>
+                <span class="bar-num">0.8022</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-lbl">Logistic Regression</span>
+                <div class="bar-track"><div class="bar-fill" style="--w:77.31%; --bar-c:#94a3b8"></div></div>
+                <span class="bar-num">0.7731</span>
+              </div>
+            </div>
+            <p style="margin-top:14px; font-size:0.9rem;">
+              <strong>Por qué gana HistGradientBoosting:</strong> Mejor <strong>CV AUC (0.9261)</strong>, mejor F1 (<strong>0.8122</strong>) y mayor detección de alertas (<strong>Recall 78.76 %</strong>).
+            </p>
+          </div>
+        </div>
+        <div class="result-pill anim d3">
+          <strong>Hiperparámetros ganadores:</strong> <code>learning_rate=0.05</code>, <code>max_iter=250</code>, <code>max_depth=5</code>, <code>min_samples_leaf=80</code>, <code>l2_regularization=0.5</code>.
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 5 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 5: Evaluación y SHAP" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 5 de 6</div>
+        <h2>Fase 5: Evaluación en Holdout y Explicabilidad (SHAP)</h2>
+        <p class="header-summary">Supera el criterio de éxito (0.9658 vs. meta 0.80) y sus predicciones obedecen a física atmosférica real.</p>
+      </header>
+      <div class="split-body">
+        <div class="media-panel anim d2" data-images='[
+          {"src":"assets/06_shap_summary.png","caption":"SHAP Summary (Top 12): variables que más empujan el riesgo a +6h"},
+          {"src":"assets/04_model_comparison_roc.png","caption":"Curvas ROC comparativas en Holdout (Sep–Nov 2026)"},
+          {"src":"assets/05_confusion_matrix.png","caption":"Matriz de Confusión del ganador (Accuracy global: 92.24 %)"}
+        ]'>
+          <div class="media-stage">
+            <img alt="Evidencia de Evaluación y SHAP" />
+            <span class="zoom-hint">Clic para ampliar</span>
+          </div>
+          <div class="media-bar">
+            <span class="media-caption"></span>
+            <div class="media-controls">
+              <button class="img-btn img-prev" title="Imagen anterior ([)">◀</button>
+              <span class="img-counter">1 / 3</span>
+              <button class="img-btn img-next" title="Imagen siguiente (])">▶</button>
+            </div>
+          </div>
+        </div>
+        <div class="text-panel anim d3">
+          <div class="card accent-left">
+            <h3>¿Qué mira el modelo según SHAP?</h3>
+            <ul class="bullet-list">
+              <li><strong><code>pm2_5</code> (1.358):</strong> Cómo está el aire ahora determina su inercia a +6h.</li>
+              <li><strong><code>altitud_m</code> (0.668):</strong> Diferencia Costa frente a Sierra/Altiplano.</li>
+              <li><strong><code>hora_cos / sin</code> (0.279 / 0.272):</strong> Predice si en 6 horas caerá en hora punta o noche.</li>
+              <li><strong><code>surface_pressure</code> y <code>wind_speed_10m</code>:</strong> Estabilidad del aire y viento que dispersa el humo.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Auditoría vs. Criterio de Fase 1</h3>
+            <p><strong>ROC-AUC:</strong> 0.9658 (Meta ≥ 0.80) · <strong>PR-AUC:</strong> 0.8958 · <strong>Accuracy:</strong> 92.24 %.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 6 DE 6 -->
+    <section class="slide" data-group="2" data-color="#7c3aed" data-kind="content" data-title="Fase 6: Despliegue y Replicación" style="--slide-color:#7c3aed">
+      <header class="slide-header anim d1">
+        <div class="kicker-sec">02 · CRISP-DM · Fase 6 de 6</div>
+        <h2>Fase 6: Despliegue y Reproducibilidad Paso a Paso</h2>
+        <p class="header-summary">El modelo vive dentro de FastAPI + SQLite y cualquier evaluador puede replicar todo en su computadora desde cero.</p>
+      </header>
+      <div class="split-body">
+        <div class="code-box anim d2">
+          <div class="code-topbar">
+            <span><strong>Terminal · Python 3.12</strong></span>
+            <span>Replicación completa</span>
+          </div>
+          <pre class="code-pre">py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# 1. Descargar datos reales de Open-Meteo
+python src/extract_data.py
+
+# 2. Generar EDA, entrenar y exportar SHAP
+python src/eda.py
+python src/train.py
+
+# 3. Ejecutar 7 pruebas y abrir sistema
+python -m pytest tests/test_api.py -v
+python run_local.py</pre>
+        </div>
+        <div class="text-panel anim d3">
+          <div class="card accent-left">
+            <h3>Garantías de Reproducibilidad</h3>
+            <ul class="bullet-list">
+              <li><strong>Librerías fijadas (<code>==</code>):</strong> Versiones exactas en <code>requirements.txt</code> (<code>scikit-learn==1.9.1</code>, <code>fastapi==0.143.0</code>, <code>shap==0.54.1</code>).</li>
+              <li><strong>Linaje SHA-256:</strong> Registrado en <code>data/DATA_VERSION.md</code> y <code>dataset_manifest.json</code> con semilla fija <code>SEED=42</code>.</li>
+              <li><strong>Pruebas reales:</strong> <strong>7 / 7 tests pasando</strong> en <code>pytest</code> (Dashboard, Open-Meteo, <code>HTTP 422</code> y SQLite).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Ejecución Rápida en Windows</h3>
+            <p>Incluye <code>ABRIR_SISTEMA.bat</code>, <code>EJECUTAR_PRUEBAS.bat</code>, <code>REENTRENAR_MODELO.bat</code> y <code>ABRIR_PRESENTACION.bat</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CIERRE ==================== -->
+    <section class="slide slide-title" data-group="99" data-color="#1e293b" data-kind="title" data-title="Cierre — Gracias" style="--slide-color:#1e293b">
+      <div class="title-pill anim d1">Cierre</div>
+      <h1 class="anim d2">Muchas Gracias</h1>
+      <p class="title-sub anim d3">AeroGuard Perú — Sistema web operativo, reproducible y sustentado paso a paso con las 6 fases de CRISP-DM.</p>
+      <div class="cover-meta anim d4">
+        <span><strong>Autor:</strong> Uhziel Elí Condori Rojas</span>
+        <span><strong>Modelo:</strong> HistGradientBoosting (ROC-AUC 0.9658)</span>
+        <span><strong>Pruebas:</strong> 7 / 7 pytest PASSED</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BARRA DE NAVEGACIÓN COMÚN -->
+  <nav id="bottomNav" class="bottom-nav" aria-label="Navegación de diapositivas">
+    <div class="nav-left">
+      <button id="btnPrev" class="nav-btn icon-only" title="Anterior (←)">◀</button>
+      <span id="slideCounter" class="slide-counter">01 / 14</span>
+      <button id="btnNext" class="nav-btn icon-only" title="Siguiente (→ / Espacio)">▶</button>
+      <button id="btnFs" class="nav-btn icon-only" title="Pantalla completa (F)">⛶</button>
+    </div>
+
+    <div id="navDots" class="nav-center" aria-label="Navegación por secciones"></div>
+
+    <div class="nav-right">
+      <button id="btnConfig" class="nav-btn icon-only" title="Configuración de la diapositiva (C)" aria-expanded="false" aria-controls="configPanel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button id="btnDrawer" class="nav-btn" title="Índice de diapositivas (M)">☰ <span class="btn-lbl-hide">Índice</span></button>
+    </div>
+  </nav>
+
+  <!-- PANEL FLOTANTE DE CONFIGURACIÓN ⚙️ -->
+  <aside id="configPanel" class="config-panel" aria-label="Configuración de visualización" hidden>
+    <div class="config-head">
+      <strong>⚙️ Ajustes de Diapositiva</strong>
+      <button id="btnCloseConfig" class="nav-btn icon-only cfg-close" title="Cerrar">✕</button>
+    </div>
+
+    <div class="config-group">
+      <label class="cfg-label">Tema de contenido</label>
+      <div class="cfg-pills" data-cfg-group="theme">
+        <button class="cfg-pill" data-val="light">☀️ Claro</button>
+        <button class="cfg-pill" data-val="dark">🌙 Oscuro</button>
+      </div>
+    </div>
+
+    <div class="config-group">
+      <label class="cfg-label">Posición de la barra</label>
+      <div class="cfg-pills" data-cfg-group="navPos">
+        <button class="cfg-pill" data-val="bottom">Abajo</button>
+        <button class="cfg-pill" data-val="top">Arriba</button>
+        <button class="cfg-pill" data-val="float">Flotante</button>
+        <button class="cfg-pill" data-val="autohide">Ocultar</button>
+      </div>
+    </div>
+
+    <div class="config-group">
+      <div class="cfg-row-head">
+        <label class="cfg-label">Escala general (todo ±)</label>
+        <span id="valScaleAll" class="cfg-val">100%</span>
+      </div>
+      <div class="cfg-stepper">
+        <button class="cfg-step" data-target="scaleAll" data-delta="-0.06">−1 pt</button>
+        <input id="rngScaleAll" type="range" min="0.82" max="1.36" step="0.06" value="1" />
+        <button class="cfg-step" data-target="scaleAll" data-delta="0.06">+1 pt</button>
+      </div>
+    </div>
+
+    <details class="config-details">
+      <summary>Ajuste independiente de letras</summary>
+      <div class="config-subgrid">
+        <div class="cfg-subrow">
+          <span>Títulos</span>
+          <input id="rngScaleTitle" type="range" min="0.82" max="1.35" step="0.05" value="1" />
+          <span id="valScaleTitle">100%</span>
+        </div>
+        <div class="cfg-subrow">
+          <span>Texto / Tarjetas</span>
+          <input id="rngScaleBody" type="range" min="0.82" max="1.35" step="0.05" value="1" />
+          <span id="valScaleBody">100%</span>
+        </div>
+        <div class="cfg-subrow">
+          <span>Tablas / Notas</span>
+          <input id="rngScaleMeta" type="range" min="0.82" max="1.35" step="0.05" value="1" />
+          <span id="valScaleMeta">100%</span>
+        </div>
+      </div>
+    </details>
+
+    <div class="config-actions">
+      <button id="btnToggleAnim" class="nav-btn cfg-act">✨ Animaciones: ON</button>
+      <button id="btnPrintPdf" class="nav-btn cfg-act">🖨️ PDF</button>
+      <button id="btnResetCfg" class="nav-btn cfg-act">↺ Reset</button>
+    </div>
+  </aside>
+
+  <!-- PANEL LATERAL DERECHO (ÍNDICE) -->
+  <div id="drawerBackdrop" class="drawer-backdrop"></div>
+  <aside id="drawer" class="drawer" aria-label="Índice de diapositivas">
+    <div class="drawer-head">
+      <h3>Índice de la Presentación</h3>
+      <button id="btnCloseDrawer" class="nav-btn icon-only" title="Cerrar (Esc)">✕</button>
+    </div>
+    <div id="drawerList" class="drawer-list"></div>
+  </aside>
+
+  <!-- LIGHTBOX DE IMAGEN -->
+  <div id="lightbox" class="lightbox" title="Clic o Esc para cerrar">
+    <img id="lbImg" alt="" />
+    <p id="lbCap"></p>
+  </div>
+
+  <script src="deck-core.js"></script>
+  <script src="demo.js?v=2"></script>
+</body>
+</html>
