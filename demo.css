@@ -312,7 +312,12 @@ html {
     align-items: stretch !important;
   }
   .manual-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin: auto 0;
+  }
+  .m-field {
+    padding: 10px 12px !important;
   }
   .dual-charts {
     grid-template-columns: 1fr 1fr !important;
